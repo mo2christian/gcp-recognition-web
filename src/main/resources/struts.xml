@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.staticContentLoader" value="staticLoader" />
+
+    <constant name="struts.objectFactory" value="spring" />
+    <constant name="struts.objectFactory.spring.autoWire" value="name" />
+
+    <bean type="org.apache.struts2.dispatcher.StaticContentLoader"
+          class="org.apache.struts2.dispatcher.DefaultStaticContentLoader"
+          name="staticLoader" />
+
+    <package name="default" extends="struts-default">
+
+        <default-action-ref name="index"/>
+
+        <action name="index" method="index" class="detectAction">
+            <result>/jsp/index.jsp</result>
+        </action>
+
+        <action name="about" method="about" class="indexAction">
+            <result>/html/about.html</result>
+        </action>
+
+        <action name="detect" method="detect" class="detectAction">
+            <result name="success">/jsp/index.jsp</result>
+            <result name="error">/jsp/index.jsp</result>
+        </action>
+
+    </package>
+
+</struts>

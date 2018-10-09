@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="autodetect">
+
+    <bean name="indexAction" class="com.mo2christian.recognition.web.action.IndexAction" scope="singleton"/>
+
+    <bean name="detectAction" class="com.mo2christian.recognition.web.action.DetectAction" scope="singleton">
+        <property name="storageService" ref="storageService"/>
+        <property name="detectService" ref="detectService"/>
+    </bean>
+
+    <bean id="storageService" class="com.mo2christian.recognition.web.service.StorageService" scope="singleton">
+        <property name="bucketName" value="recognition-218419.appspot.com"/>
+        <property name="folder" value="images"/>
+    </bean>
+
+    <bean id="detectService" class="com.mo2christian.recognition.web.service.DetectService" scope="singleton">
+        <property name="detectUrl" value="https://detect-dot-recognition-218419.appspot.com/rest/scan"/>
+    </bean>
+
+</beans>
