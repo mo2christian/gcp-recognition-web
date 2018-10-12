@@ -7,6 +7,7 @@
     <bean name="detectAction" class="com.mo2christian.recognition.web.action.DetectAction" scope="singleton">
         <property name="storageService" ref="storageService"/>
         <property name="detectService" ref="detectService"/>
+        <property name="version" value="${project.version}"/>
     </bean>
 
     <bean id="storageService" class="com.mo2christian.recognition.web.service.StorageService" scope="singleton">

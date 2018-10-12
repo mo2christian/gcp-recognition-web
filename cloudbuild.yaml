@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/recognition-218419/mvn'
+  args: ['clean', 'deploy']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'target/classes/install.sh', 'gs://artifacts.recognition-218419.appspot.com/recognition-web']
+timeout: 600s
+tags: ['recognition', 'web']

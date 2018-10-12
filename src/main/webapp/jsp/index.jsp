@@ -8,7 +8,7 @@
 </head>
 <body>
     <center>
-        <h2>Welcome page</h2>
+        <h2>Welcome page </h2><h4>Version <s:property value="version"/></h4>
         <s:form action="detect" method="post" enctype="multipart/form-data">
             <s:file name="input.image" label="Image"/>
             <s:select name="input.target" list="langues" listKey="code" listValue="text" label="Langue des libellés" />

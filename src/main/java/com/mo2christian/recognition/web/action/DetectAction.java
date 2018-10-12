@@ -28,6 +28,8 @@ public class DetectAction extends ActionSupport {
 
     private List<Language> langues;
 
+    private String version;
+
     public DetectAction(){
         langues = new LinkedList<>();
         langues.add(new Language("fr", "Francais"));
@@ -153,5 +155,13 @@ public class DetectAction extends ActionSupport {
 
     public List<Language> getLangues() {
         return langues;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }
