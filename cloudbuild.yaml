@@ -3,5 +3,7 @@ steps:
   args: ['clean', 'deploy']
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'target/classes/install.sh', 'gs://artifacts.recognition-218419.appspot.com/recognition-web']
+- name: 'gcr.io/recognition-218419/deploy'
+  args: ['--region', 'us-west2', '--project', 'recognition-218419', '--instancegroup', 'recognition-web']
 timeout: 600s
 tags: ['recognition', 'web']
