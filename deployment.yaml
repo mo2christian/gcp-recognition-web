@@ -1,0 +1,91 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: reko-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "reko"
+spec:
+  rules:
+  - host: detect.endpoints.recognition-218419.cloud.goog
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: detect-svc
+          servicePort: 8081
+  - host: translate.endpoints.recognition-218419.cloud.goog
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: translate-svc
+          servicePort: 8081
+  - host: reko.just2teach.com
+    http:
+      paths:
+        - path: /*
+          backend:
+            serviceName: reko-svc
+            servicePort: 8080
+
+---
+# kubectl create secret docker-registry auth-gcr --docker-username=_json_key  --docker-password="$(cat auth-gcr.json)" --docker-server=https://eu.gcr.io --docker-email=christian@example.com
+
+# kubectl create secret generic auth-gcp --from-file=./reko.json
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: reko-svc
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: reko-web
+  type: NodePort
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: reko-web
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: reko-web
+    spec:
+      containers:
+      - name: web
+        image: eu.gcr.io/recognition-218419/recognition-web
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/etc/creds/reko.json"
+        - name: DETECT_URL
+          value: http://detect.endpoints.recognition-218419.cloud.goog/rest/do
+        - name: BUCKET_NAME
+          value: reko-recognition-218419
+        - name: FOLDER
+          value: images
+        volumeMounts:
+        - name: creds
+          mountPath: "/etc/creds"
+          readOnly: true
+        ports:
+          - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz.action
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 90
+      imagePullSecrets:
+      - name: auth-gcr
+      volumes:
+        - name: creds
+          secret:
+            secretName: auth-gcp

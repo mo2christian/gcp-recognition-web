@@ -1,9 +1,20 @@
 steps:
 - name: 'gcr.io/recognition-218419/mvn'
-  args: ['clean', 'deploy']
-- name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'target/classes/install.sh', 'gs://artifacts.recognition-218419.appspot.com/recognition-web']
-- name: 'gcr.io/recognition-218419/deploy'
-  args: ['--region', 'us-west2', '--project', 'recognition-218419', '--instancegroup', 'recognition-web']
+  args: ['clean', 'package']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/recognition-web:${_VERSION}', '-t', 'eu.gcr.io/$PROJECT_ID/recognition-web:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/recognition-web:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/recognition-web:${_VERSION}']
+- name: 'ubuntu'
+  args: ['bash','-c','sed -i s/APP_VERSION/${_VERSION}/g deployment.yaml']
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'deployment.yaml']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=reko-cluster'
+substitutions:
+  _VERSION: 0.1.6.1
 timeout: 600s
-tags: ['recognition', 'web']
+tags: ['recognition', 'detect']

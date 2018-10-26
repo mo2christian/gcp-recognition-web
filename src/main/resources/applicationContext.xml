@@ -10,13 +10,13 @@
         <property name="version" value="${project.version}"/>
     </bean>
 
-    <bean id="storageService" class="com.mo2christian.recognition.web.service.StorageService" scope="singleton">
-        <property name="bucketName" value="recognition-218419.appspot.com"/>
-        <property name="folder" value="images"/>
+    <bean id="storageService" class="com.mo2christian.recognition.web.service.StorageService" scope="singleton" init-method="init">
+        <property name="defaultBucketName" value="reko-recognition-218419"/>
+        <property name="defaultFolder" value="images"/>
     </bean>
 
-    <bean id="detectService" class="com.mo2christian.recognition.web.service.DetectService" scope="singleton">
-        <property name="detectUrl" value="https://detect-dot-recognition-218419.appspot.com/rest/scan"/>
+    <bean id="detectService" class="com.mo2christian.recognition.web.service.DetectService" scope="singleton" init-method="init">
+        <property name="defaultDetectUrl" value="https://detect-dot-recognition-218419.appspot.com/rest/scan"/>
     </bean>
 
 </beans>

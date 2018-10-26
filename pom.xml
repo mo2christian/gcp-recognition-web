@@ -6,7 +6,7 @@
 
     <groupId>com.mo2christian.recognition</groupId>
     <artifactId>recognition-web</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6.1</version>
     <packaging>war</packaging>
 
     <properties>
@@ -83,6 +83,7 @@
     </distributionManagement>
 
     <build>
+        <finalName>reko</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -103,7 +104,27 @@
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>copy</goal></goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse.jetty</groupId>
+                                    <artifactId>jetty-runner</artifactId>
+                                    <version>${jetty.version}</version>
+                                    <destFileName>jetty-runner.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     

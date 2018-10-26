@@ -24,6 +24,15 @@
 
         <default-action-ref name="index"/>
 
+        <global-results>
+            <result name="error">/jsp/error.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.RuntimeException" result="error"></exception-mapping>
+            <exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+        </global-exception-mappings>
+
         <action name="index" method="index" class="detectAction">
             <interceptor-ref name="fileUpload">
                 <param name="allowedTypes">image/jpeg,image/gif,image/png</param>
@@ -31,12 +40,16 @@
             <result>/jsp/index.jsp</result>
         </action>
 
+        <action name="detect" method="detect" class="detectAction">
+            <result>/jsp/index.jsp</result>
+        </action>
+
         <action name="about" method="about" class="indexAction">
             <result>/html/about.html</result>
         </action>
 
-        <action name="detect" method="detect" class="detectAction">
-            <result>/jsp/index.jsp</result>
+        <action name="healthz" method="ping" class="indexAction">
+            <result>/html/ping.html</result>
         </action>
 
     </package>

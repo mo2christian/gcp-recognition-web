@@ -18,4 +18,8 @@ public class IndexAction extends ActionSupport {
         return SUCCESS;
     }
 
+    public String ping(){
+        return SUCCESS;
+    }
+
 }

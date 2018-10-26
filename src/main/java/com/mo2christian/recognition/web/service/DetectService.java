@@ -3,6 +3,8 @@ package com.mo2christian.recognition.web.service;
 import com.google.gson.Gson;
 import com.mo2christian.recognition.web.model.DetectRequest;
 import com.mo2christian.recognition.web.model.DetectResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,16 +13,26 @@ import org.springframework.web.client.RestTemplate;
  */
 public class DetectService {
 
+    private final Logger logger = LogManager.getLogger(DetectService.class);
+
     private String detectUrl;
 
     public DetectService(){
     }
 
-    public void setDetectUrl(String detectUrl) {
+    public void init(){
+        String urlEnv = System.getenv("DETECT_URL");
+        if (urlEnv != null){
+            detectUrl = urlEnv;
+        }
+    }
+
+    public void setDefaultDetectUrl(String detectUrl) {
         this.detectUrl = detectUrl;
     }
 
     public DetectResponse detectLabel(DetectRequest request){
+        logger.debug("Detection de l'image {} a l'url {}", request.getObjectName(), detectUrl);
         RestTemplate restTemplate = new RestTemplate();
         Gson gson = new Gson();
         HttpHeaders headers = new HttpHeaders();

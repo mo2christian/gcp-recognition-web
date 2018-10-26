@@ -37,4 +37,11 @@ public class DetectRequest {
     public void setTarget(String target) {
         this.target = target;
     }
+
+    @Override
+    public String toString() {
+        return "DetectRequest{" +
+                "objectName='" + objectName + '\'' +
+                '}';
+    }
 }

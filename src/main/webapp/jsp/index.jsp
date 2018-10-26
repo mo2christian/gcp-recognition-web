@@ -17,7 +17,7 @@
         <h2>Welcome page </h2><h4>Version <s:property value="version"/></h4>
         <s:form action="detect" method="post" enctype="multipart/form-data">
             <s:file id="file" name="input.image" label="Image" accept="image/jpeg,image/gif,image/png"/>
-            <s:select name="input.target" list="langues" listKey="code" listValue="text" label="Langue des libellés" />
+            <s:select name="input.target" list="langues" listKey="code" listValue="text" label="Labels language" />
             <s:submit/>
         </s:form>
         <br/><br/><br/><br/>
