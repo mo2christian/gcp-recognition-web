@@ -1,13 +1,15 @@
 package com.mo2christian.recognition.web.action;
 
-import com.mo2christian.recognition.web.model.DetectRequest;
-import com.mo2christian.recognition.web.model.Image;
-import com.mo2christian.recognition.web.model.Language;
+import com.mo2christian.recognition.web.model.*;
 import com.mo2christian.recognition.web.service.DetectService;
 import com.mo2christian.recognition.web.service.StorageService;
+import com.mo2christian.recognition.web.service.TranslateService;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -22,6 +24,8 @@ public class DetectAction extends ActionSupport {
 
     private StorageService storageService;
 
+    private TranslateService translateService;
+
     private Input input;
 
     private Output output;
@@ -30,21 +34,42 @@ public class DetectAction extends ActionSupport {
 
     private String version;
 
+    private String email;
+
     public DetectAction(){
         langues = new LinkedList<>();
-        langues.add(new Language("fr", "Francais"));
         langues.add(new Language("en", "Anglais"));
+        langues.add(new Language("fr", "Francais"));
+    }
+
+    public Token getToken(){
+        HttpSession session = ServletActionContext.getRequest().getSession();
+        Token token = (Token) session.getAttribute(Token.NAME);
+        return token;
     }
 
     public String detect(){
         try {
+            Token token = getToken();
+            email = token.getEmail();
+
             Image img = storageService.upload(input.getImage());
             DetectRequest detectRequest = new DetectRequest();
             detectRequest.setBucketName(img.getBucketName());
             detectRequest.setObjectName(img.getObjectName());
             detectRequest.setTarget(input.getTarget());
+            detectRequest.setJwt(token.getValue());
+            DetectResponse detectResponse = detectService.detectLabel(detectRequest);
+
+            TranslateRequest translateRequest = new TranslateRequest();
+            translateRequest.setFrom(detectResponse.getLocale());
+            translateRequest.setTarget(input.getTarget());
+            translateRequest.setWords(detectResponse.getWords());
+            translateRequest.setJwt(token.getValue());
+            List<String> translations = translateService.translate(translateRequest);
+
             output = new Output();
-            output.setWords(detectService.detectLabel(detectRequest).getWords());
+            output.setWords(translations);
             output.setUrl(img.getUrl());
             return SUCCESS;
         }
@@ -55,6 +80,9 @@ public class DetectAction extends ActionSupport {
     }
 
     public String index(){
+        Token token = getToken();
+        email = token.getEmail();
+
         input = new Input();
         input.setTarget(ServletActionContext.getRequest().getLocale().getLanguage());
         output = null;
@@ -153,6 +181,10 @@ public class DetectAction extends ActionSupport {
         this.storageService = storageService;
     }
 
+    public void setTranslateService(TranslateService translateService) {
+        this.translateService = translateService;
+    }
+
     public List<Language> getLangues() {
         return langues;
     }
@@ -163,5 +195,9 @@ public class DetectAction extends ActionSupport {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

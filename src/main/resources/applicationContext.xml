@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
-<beans default-autowire="autodetect">
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop = "http://www.springframework.org/schema/aop"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/aop
+   http://www.springframework.org/schema/aop/spring-aop.xsd ">
 
     <bean name="indexAction" class="com.mo2christian.recognition.web.action.IndexAction" scope="singleton"/>
 
     <bean name="detectAction" class="com.mo2christian.recognition.web.action.DetectAction" scope="singleton">
         <property name="storageService" ref="storageService"/>
         <property name="detectService" ref="detectService"/>
+        <property name="translateService" ref="translateService"/>
         <property name="version" value="${project.version}"/>
     </bean>
 
@@ -17,6 +23,10 @@
 
     <bean id="detectService" class="com.mo2christian.recognition.web.service.DetectService" scope="singleton" init-method="init">
         <property name="defaultDetectUrl" value="https://detect-dot-recognition-218419.appspot.com/rest/scan"/>
+    </bean>
+
+    <bean id="translateService" class="com.mo2christian.recognition.web.service.TranslateService" scope="singleton" init-method="init">
+        <property name="defaultTranslateUrl" value="https://translate-dot-recognition-218419.appspot.com/"/>
     </bean>
 
 </beans>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.staticContentLoader" value="staticLoader" />
+
+    <constant name="struts.objectFactory" value="spring" />
+    <constant name="struts.objectFactory.spring.autoWire" value="name" />
+    <constant name="struts.multipart.maxSize" value="2000000" />
+
+    <constant name="struts.serve.static" value="true" />
+    <constant name="struts.action.excludePattern" value="/static/js/.*?, /static/css/.*?" />
+    <constant name="struts.staticContentLoader" value="staticLoader" />
+
+    <bean type="org.apache.struts2.dispatcher.StaticContentLoader"
+          class="org.apache.struts2.dispatcher.DefaultStaticContentLoader"
+          name="staticLoader" />
+
+    <package name="reko-web" extends="struts-default">
+        <interceptors>
+            <interceptor-stack name="appStack">
+                <interceptor-ref name="iapToken"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            <interceptor name="iapToken" class="com.mo2christian.recognition.web.action.IapInterceptor"/>
+        </interceptors>
+    </package>
+</struts>

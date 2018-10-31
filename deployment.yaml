@@ -4,16 +4,19 @@ metadata:
   name: reko-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "reko"
+    kubernetes.io/ingress.allow-http: "false"
 spec:
+  tls:
+    - secretName: reko-tls
   rules:
-  - host: detect.endpoints.recognition-218419.cloud.goog
+  - host: detect.just2teach.com
     http:
       paths:
       - path: /*
         backend:
           serviceName: detect-svc
           servicePort: 8081
-  - host: translate.endpoints.recognition-218419.cloud.goog
+  - host: translate.just2teach.com
     http:
       paths:
       - path: /*
@@ -27,22 +30,58 @@ spec:
           backend:
             serviceName: reko-svc
             servicePort: 8080
+        - path: /static/*
+          backend:
+            serviceName: reko-svc
+            servicePort: 8081
 
 ---
 # kubectl create secret docker-registry auth-gcr --docker-username=_json_key  --docker-password="$(cat auth-gcr.json)" --docker-server=https://eu.gcr.io --docker-email=christian@example.com
 
 # kubectl create secret generic auth-gcp --from-file=./reko.json
 
+# kubectl create secret generic reko-oauth --from-literal=client_id=50295857426-9tm7d80a8vkqqbaq046t0ppu82004ujk.apps.googleusercontent.com --from-literal=client_secret=zla3ztCv_NFK1ssIKyJ0s04t
+
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  name: reko-static
+spec:
+  cdn:
+    enabled: true
+    cachePolicy:
+      includeHost: true
+      includeProtocol: true
+      includeQueryString: false
+---
+
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  name: reko-iap
+spec:
+  iap:
+    enabled: true
+    oauthclientCredentials:
+      secretName: reko-oauth
+---
+
 apiVersion: v1
 kind: Service
 metadata:
   name: reko-svc
+  annotations:
+    beta.cloud.google.com/backend-config: '{"ports": {"8081":"reko-static", "8080":"reko-iap"}  }'
 spec:
   ports:
   - port: 8080
     targetPort: 8080
     protocol: TCP
     name: http
+  - port: 8081
+    targetPort: 8080
+    protocol: TCP
+    name: static
   selector:
     app: reko-web
   type: NodePort
@@ -61,12 +100,14 @@ spec:
     spec:
       containers:
       - name: web
-        image: eu.gcr.io/recognition-218419/recognition-web
+        image: eu.gcr.io/recognition-218419/recognition-web:APP_VERSION
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: "/etc/creds/reko.json"
         - name: DETECT_URL
-          value: http://detect.endpoints.recognition-218419.cloud.goog/rest/do
+          value: https://detect.just2teach.com/rest/do
+        - name: TRANSLATE_URL
+          value: https://translate.just2teach.com/do
         - name: BUCKET_NAME
           value: reko-recognition-218419
         - name: FOLDER
@@ -82,7 +123,7 @@ spec:
             path: /healthz.action
             port: 8080
           initialDelaySeconds: 15
-          periodSeconds: 90
+          periodSeconds: 10
       imagePullSecrets:
       - name: auth-gcr
       volumes:

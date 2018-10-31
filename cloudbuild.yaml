@@ -15,6 +15,6 @@ steps:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=reko-cluster'
 substitutions:
-  _VERSION: 0.1.6.1
+  _VERSION: 0.1.6.5
 timeout: 600s
 tags: ['recognition', 'detect']

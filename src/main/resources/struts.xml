@@ -5,27 +5,15 @@
 
 <struts>
 
-    <constant name="struts.devMode" value="true" />
-    <constant name="struts.staticContentLoader" value="staticLoader" />
+    <include file="app-config.xml"/>
 
-    <constant name="struts.objectFactory" value="spring" />
-    <constant name="struts.objectFactory.spring.autoWire" value="name" />
-    <constant name="struts.multipart.maxSize" value="2000000" />
-
-    <constant name="struts.serve.static" value="true" />
-    <constant name="struts.action.excludePattern" value="/static/js/.*?, /static/css/.*?" />
-    <constant name="struts.staticContentLoader" value="staticLoader" />
-
-    <bean type="org.apache.struts2.dispatcher.StaticContentLoader"
-          class="org.apache.struts2.dispatcher.DefaultStaticContentLoader"
-          name="staticLoader" />
-
-    <package name="default" extends="struts-default">
+    <package name="default" extends="reko-web">
 
         <default-action-ref name="index"/>
 
         <global-results>
             <result name="error">/jsp/error.jsp</result>
+            <result name="login">/jsp/oauth.jsp</result>
         </global-results>
 
         <global-exception-mappings>
@@ -34,13 +22,12 @@
         </global-exception-mappings>
 
         <action name="index" method="index" class="detectAction">
-            <interceptor-ref name="fileUpload">
-                <param name="allowedTypes">image/jpeg,image/gif,image/png</param>
-            </interceptor-ref>
+            <interceptor-ref name="appStack"/>
             <result>/jsp/index.jsp</result>
         </action>
 
         <action name="detect" method="detect" class="detectAction">
+            <interceptor-ref name="appStack"/>
             <result>/jsp/index.jsp</result>
         </action>
 

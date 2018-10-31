@@ -11,6 +11,8 @@ public class DetectRequest {
 
     private String target;
 
+    private String jwt;
+
     public DetectRequest(){
     }
 
@@ -36,6 +38,14 @@ public class DetectRequest {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 
     @Override
