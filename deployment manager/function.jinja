@@ -1,0 +1,24 @@
+
+
+{% set pubsub_name = env['deployment'] + '-' + properties["name"] %}
+{% set function_name = env['deployment'] + '-' + properties["name"] %}
+resources:
+- name: my-function
+  type: cloudfunctions.v1beta2.function
+  properties:
+    function: {{ function_name }}
+    entryPoint: record_translation
+    runtime: python37
+    timeout: 10s
+    availableMemoryMb: 128
+    sourceRepositoryUrl: {{ properties["source"] }}
+    location: {{ properties["location"] }}
+    environmentVariables:
+      PROJECT_ID: {{ env["project"] }}
+    eventTrigger:
+      eventType: "providers/cloud.pubsub/eventTypes/topic.publish"
+      resource: $(ref.my-topic.name)
+- name: my-topic
+  type: pubsub.v1.topic
+  properties:
+    topic: {{ pubsub_name }}

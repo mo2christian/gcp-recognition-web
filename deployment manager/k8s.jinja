@@ -1,0 +1,42 @@
+
+{% set nodepool = properties['name'] + '-pool'  %}
+{% set cluster = properties['name'] + '-cluster'  %}
+
+resources:
+- name: ip
+  type: compute.v1.globalAddress
+  properties:
+    name: reko
+    description: Adresse IP de l'application reko
+
+- name: cluster
+  type: container.v1.cluster
+  properties:
+    zone: {{ properties['zone'] }}
+    cluster:
+      name: {{ cluster }}
+      initialClusterVersion: {{ properties['version'] }}
+      nodePools:
+      - name: {{ nodepool }}
+        config:
+          machineType: {{ properties['machineType'] }}
+          diskSizeGb: {{ properties['diskSize'] }}
+          oauthScopes:
+          - https://www.googleapis.com/auth/devstorage.read_only
+          - https://www.googleapis.com/auth/logging.write
+          - https://www.googleapis.com/auth/monitoring
+          - https://www.googleapis.com/auth/servicecontrol
+          - https://www.googleapis.com/auth/service.management.readonly
+          - https://www.googleapis.com/auth/trace.append
+          imageType: COS
+          diskType: pd-standard
+          preemptible: true
+        initialNodeCount: {{ properties['minNode'] }}
+        autoscaling:
+          enabled: true
+          minNodeCount: {{ properties['minNode'] }}
+          maxNodeCount: {{ properties['maxNode'] }}
+        management:
+          autoUpgrade: true
+          autoRepair: true
+        version: {{ properties['version'] }}

@@ -1,0 +1,30 @@
+imports:
+- path: bucket.jinja
+- path: function.jinja
+- path: k8s.jinja
+
+resources:
+- name: images-bucket
+  type: bucket.jinja
+  properties:
+    name: test
+    location: us-central1
+- name: recorder-function
+  type: function.jinja
+  properties:
+    name: recorder
+    source: https://source.developers.google.com/projects/recognition-218419/repos/recorder/revisions/f683bc0d7f9ae497f6913f6b7ab72cd85d5e1c47/paths/com/mo2christian/recognition/recorder
+    location: us-central1
+- name: reko-cluster
+  type: k8s.jinja
+  properties:
+    name: reko
+    machineType: g1-small
+    diskSize: 40
+    minNode: 1
+    maxNode: 2
+    network: default
+    subnetwork: default
+    location: europe-west2
+    zone: europe-west2-c
+    version: 1.10.9-gke.0

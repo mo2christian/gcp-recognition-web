@@ -1,0 +1,14 @@
+
+{% set bucket_name = env['project'] + '-' + properties["name"] %}
+
+resources:
+- name: {{ bucket_name }}
+  type: storage.v1.bucket
+  properties:
+    location: {{ properties["location"] }}
+    lifecycle:
+      rule:
+      - action:
+          type: "Delete"
+        condition:
+          age: 1
