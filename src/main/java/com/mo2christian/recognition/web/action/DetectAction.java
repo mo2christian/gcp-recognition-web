@@ -38,8 +38,9 @@ public class DetectAction extends ActionSupport {
 
     public DetectAction(){
         langues = new LinkedList<>();
-        langues.add(new Language("en", "Anglais"));
-        langues.add(new Language("fr", "Francais"));
+        langues.add(new Language("en", "English"));
+        langues.add(new Language("fr", "French"));
+        langues.add(new Language("es", "Spanish"));
     }
 
     public Token getToken(){

@@ -17,7 +17,7 @@ resources:
       name: {{ cluster }}
       initialClusterVersion: {{ properties['version'] }}
       nodePools:
-      - name: {{ nodepool }}
+      - name: {{ nodepool }}-1
         config:
           machineType: {{ properties['machineType'] }}
           diskSizeGb: {{ properties['diskSize'] }}

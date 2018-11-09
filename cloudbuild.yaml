@@ -12,9 +12,9 @@ steps:
 - name: 'gcr.io/cloud-builders/kubectl'
   args: ['apply', '-f', 'deployment.yaml']
   env:
-    - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-c'
     - 'CLOUDSDK_CONTAINER_CLUSTER=reko-cluster'
 substitutions:
-  _VERSION: 0.1.6.5
+  _VERSION: 0.1.6.7
 timeout: 600s
 tags: ['recognition', 'detect']

@@ -7,8 +7,8 @@ resources:
 - name: images-bucket
   type: bucket.jinja
   properties:
-    name: test
-    location: us-central1
+    name: reko
+    location: europe-west1
 - name: recorder-function
   type: function.jinja
   properties:
@@ -21,10 +21,10 @@ resources:
     name: reko
     machineType: g1-small
     diskSize: 40
-    minNode: 1
-    maxNode: 2
+    minNode: 2
+    maxNode: 3
     network: default
     subnetwork: default
-    location: europe-west2
-    zone: europe-west2-c
-    version: 1.10.9-gke.0
+    location: europe-west1
+    zone: europe-west1-c
+    version: 1.10.9-gke.3

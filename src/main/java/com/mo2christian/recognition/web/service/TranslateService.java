@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Service de traduction.
  */
-public class TranslateService{
+public class TranslateService extends SSLValidator implements ApiKey{
 
     private Logger logger = LogManager.getLogger(TranslateService.class.getClass());
 
@@ -52,7 +52,7 @@ public class TranslateService{
     public List<String> translate(TranslateRequest request){
         logger.debug("Traduction de {} a {} sur le lien {}", request.getFrom(), request.getTarget(), translateURL);
         TranslateResponse response;
-        HttpPost httpPost = new HttpPost(translateURL);
+        HttpPost httpPost = new HttpPost(addKey(translateURL));
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.addHeader("Accept", "application/json");
         httpPost.addHeader("Authorization", "Bearer " + request.getJwt());
@@ -76,28 +76,5 @@ public class TranslateService{
         }
         return response.getWords();
     }
-
-    private CloseableHttpClient getHttpClient(){
-        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-        try{
-            SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
-                    .loadTrustMaterial(null, acceptingTrustStrategy)
-                    .build();
-            SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-            CloseableHttpClient httpClient = HttpClients.custom()
-                    .setSSLSocketFactory(csf)
-                    .build();
-            /*HttpComponentsClientHttpRequestFactory requestFactory =
-                    new HttpComponentsClientHttpRequestFactory();
-
-            requestFactory.setHttpClient(httpClient);*/
-            return httpClient;
-        }
-        catch(NoSuchAlgorithmException|KeyStoreException|KeyManagementException ex){
-            throw new RuntimeException(ex);
-        }
-
-    }
-
 
 }

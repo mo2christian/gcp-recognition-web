@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Service pour detecter le contenu d'une image.
  */
-public class DetectService extends SSLValidator {
+public class DetectService extends SSLValidator implements ApiKey {
 
     private final Logger logger = LogManager.getLogger(DetectService.class);
 
@@ -33,6 +33,7 @@ public class DetectService extends SSLValidator {
 
     public DetectResponse detectLabel(DetectRequest request){
         logger.debug("Detection de l'image {} a l'url {}", request.getObjectName(), detectUrl);
+        String host = addKey(detectUrl);
         RestTemplate restTemplate = new RestTemplate(getHttpClientFactory());
         Gson gson = new Gson();
         HttpHeaders headers = new HttpHeaders();
@@ -40,7 +41,7 @@ public class DetectService extends SSLValidator {
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         headers.add("Authorization", "Bearer " + request.getJwt());
         HttpEntity<String> entity = new HttpEntity<>(gson.toJson(request), headers);
-        ResponseEntity<String> resp = restTemplate.postForEntity(detectUrl, entity, String.class);
+        ResponseEntity<String> resp = restTemplate.postForEntity(host, entity, String.class);
         HttpStatus status = resp.getStatusCode();
         if (!status.is2xxSuccessful())
             throw new RuntimeException(status.getReasonPhrase());
