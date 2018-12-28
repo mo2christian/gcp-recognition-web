@@ -1,0 +1,8 @@
+Application Web pour detecter les motifs d'une image et les afficher dans une langue choisie
+
+Déployé sur Google Cloud, utilise les service
+
+- Kubernetes
+- Deployment manager
+- IAP pour l'authentification
+- Cloud CDN pour le cache
