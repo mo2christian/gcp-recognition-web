@@ -1,5 +1,5 @@
 steps:
-- name: 'gcr.io/recognition-218419/mvn'
+- name: 'gcr.io/$PROJECT_ID/mvn'
   args: ['clean', 'package']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/recognition-web:${_VERSION}', '-t', 'eu.gcr.io/$PROJECT_ID/recognition-web:latest', '.']

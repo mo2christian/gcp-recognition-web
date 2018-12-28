@@ -40,7 +40,7 @@ spec:
 
 # kubectl create secret generic auth-gcp --from-file=./reko.json
 
-# kubectl create secret generic reko-oauth --from-literal=client_id=50295857426-9tm7d80a8vkqqbaq046t0ppu82004ujk.apps.googleusercontent.com --from-literal=client_secret=zla3ztCv_NFK1ssIKyJ0s04t
+# kubectl create secret generic reko-oauth --from-literal=client_id=XXXXXXXXX --from-literal=client_secret=XXXXXXXXX
 
 # kubectl create secret tls reko-tls --cert=ssl/certificate.crt --key=ssl/private.key
 
@@ -115,7 +115,7 @@ spec:
         - name: FOLDER
           value: images
         - name: API_KEY
-          value: AIzaSyBVQ8bUuMVy-igtNFtkccTZQKTeyG0lUD4
+          value: XXXXXXX
         volumeMounts:
         - name: creds
           mountPath: "/etc/creds"
